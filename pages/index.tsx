@@ -98,6 +98,17 @@ export default function Home() {
     setState(newState);
   };
 
+  const deleteTask = (column, index) => {
+    const newState = { ...state };
+    console.log(newState, index);
+    delete newState.tasks[index];
+    newState.columns[column].taskIds = newState.columns[column].taskIds.filter(
+      (id) => id != index
+    );
+    console.log(newState);
+    setState(newState);
+  };
+
   useEffect(() => {
     if (Object.keys(state).length > 0)
       localStorage.setItem("state", JSON.stringify(state));
@@ -137,6 +148,7 @@ export default function Home() {
             return (
               <Column
                 addTask={addTask}
+                deleteTask={deleteTask}
                 key={column.id}
                 column={column}
                 tasks={tasks}

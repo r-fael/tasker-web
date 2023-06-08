@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { Flex, Heading, Text } from "@chakra-ui/react";
 const Column = dynamic(() => import("../src/Column"), { ssr: false });
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const [state, setState] = useState({} as IInitialData);
@@ -48,9 +50,7 @@ export default function Home() {
     //if drag from different column
 
     const startTaskIds = Array.from(sourceColumn.taskIds);
-    console.log("sourceColumn.taskIds:", sourceColumn.taskIds);
     const [removed] = startTaskIds.splice(source.index, 1);
-    console.log("removed, source.index: ", removed, source.index);
     const newStartColumns = {
       ...sourceColumn,
       taskIds: startTaskIds,
@@ -76,9 +76,6 @@ export default function Home() {
 
   const handleChange = (column, value, index) => {
     const newState = { ...state };
-    console.log("newState:", newState);
-
-    console.log(column, value, index);
     newState.tasks = {
       ...newState.tasks,
       [index]: { id: index, content: value },
@@ -100,12 +97,20 @@ export default function Home() {
 
   const deleteTask = (column, index) => {
     const newState = { ...state };
-    console.log(newState, index);
     delete newState.tasks[index];
     newState.columns[column].taskIds = newState.columns[column].taskIds.filter(
       (id) => id != index
     );
-    console.log(newState);
+    toast.success("Task deleted successfully!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
     setState(newState);
   };
 
@@ -116,13 +121,24 @@ export default function Home() {
 
   useEffect(() => {
     const stateParsed = JSON.parse(localStorage.getItem("state"));
-    console.log(stateParsed);
     if (stateParsed !== null) setState(stateParsed);
     else setState(initialData);
   }, []);
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <Flex
         flexDir="column"
         bg="main-bg"
@@ -139,7 +155,7 @@ export default function Home() {
             by r-fael
           </Text>
         </Flex>
-        <Flex justify="space-between" p="0 4rem 4rem 4rem">
+        <Flex justify="center" p="0 4rem 4rem 4rem" gap="2rem">
           {state.columnOrder?.map((columnId) => {
             const column = state.columns[columnId];
             const tasks = column.taskIds.map((taskId) => {

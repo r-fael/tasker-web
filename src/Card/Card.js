@@ -19,7 +19,6 @@ const Card = ({ task, index, handleChange, column, deleteTask }) => {
   const handleIsEditable = (input) => {
     setIsEditable(!isEditable);
     if (input && value) {
-      console.log(input, value, index);
       handleChange(column, value, task.id);
     }
   };

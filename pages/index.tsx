@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { Flex, Heading, Text } from "@chakra-ui/react";
 const Column = dynamic(() => import("../src/Column"), { ssr: false });
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 
 export default function Home() {
-  const [state, setState] = useState(initialData);
+  const [state, setState] = useState({} as IInitialData);
+
   const reorderColumnsList = (sourceColumn, startIndex, endIndex) => {
     const newTasksIds = Array.from(sourceColumn.taskIds);
     const [item] = newTasksIds.splice(startIndex, 1);
@@ -47,11 +48,14 @@ export default function Home() {
     //if drag from different column
 
     const startTaskIds = Array.from(sourceColumn.taskIds);
+    console.log("sourceColumn.taskIds:", sourceColumn.taskIds);
     const [removed] = startTaskIds.splice(source.index, 1);
+    console.log("removed, source.index: ", removed, source.index);
     const newStartColumns = {
       ...sourceColumn,
       taskIds: startTaskIds,
     };
+
     const endTaskIds = Array.from(destinationColumn.taskIds);
     endTaskIds.splice(destination.index, 0, removed);
     const newEndColumns = {
@@ -70,6 +74,19 @@ export default function Home() {
     setState(newState);
   };
 
+  const handleChange = (column, value, index) => {
+    const newState = { ...state };
+    console.log("newState:", newState);
+
+    console.log(column, value, index);
+    newState.tasks = {
+      ...newState.tasks,
+      [index]: { id: index, content: value },
+    };
+
+    setState(newState);
+  };
+
   const addTask = (title) => {
     const newState = { ...state };
     const id = Object.keys(newState.tasks).length + 1;
@@ -80,6 +97,18 @@ export default function Home() {
     newState.columns[title].taskIds = [id, ...newState.columns[title].taskIds];
     setState(newState);
   };
+
+  useEffect(() => {
+    if (Object.keys(state).length > 0)
+      localStorage.setItem("state", JSON.stringify(state));
+  }, [state]);
+
+  useEffect(() => {
+    const stateParsed = JSON.parse(localStorage.getItem("state"));
+    console.log(stateParsed);
+    if (stateParsed !== null) setState(stateParsed);
+    else setState(initialData);
+  }, []);
 
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -100,7 +129,7 @@ export default function Home() {
           </Text>
         </Flex>
         <Flex justify="space-between" p="0 4rem 4rem 4rem">
-          {state.columnOrder.map((columnId) => {
+          {state.columnOrder?.map((columnId) => {
             const column = state.columns[columnId];
             const tasks = column.taskIds.map((taskId) => {
               return state.tasks[taskId];
@@ -111,6 +140,7 @@ export default function Home() {
                 key={column.id}
                 column={column}
                 tasks={tasks}
+                handleChange={handleChange}
               />
             );
           })}
@@ -139,18 +169,18 @@ interface IInitialData {
 
 const initialData: IInitialData = {
   tasks: {
-    1: { id: 1, content: "Configure Next.js application" },
-    2: { id: 2, content: "Configure Next.js and tailwind " },
-    3: { id: 3, content: "Create sidebar navigation menu" },
-    4: { id: 4, content: "Create page footer" },
-    5: { id: 5, content: "Create page navigation menu" },
-    6: { id: 6, content: "Create page layout" },
+    // 0: { id: 0, content: "Configure Next.js application" },
+    // 1: { id: 1, content: "Configure Next.js and tailwind " },
+    // 2: { id: 2, content: "Create sidebar navigation menu" },
+    // 3: { id: 3, content: "Create page footer" },
+    // 4: { id: 4, content: "Create page navigation menu" },
+    // 5: { id: 5, content: "Create page layout" },
   },
   columns: {
     "column-1": {
       id: "column-1",
       title: "TO-DO",
-      taskIds: [1, 2, 3, 4, 5, 6],
+      taskIds: [],
     },
     "column-2": {
       id: "column-2",

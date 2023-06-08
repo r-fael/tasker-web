@@ -3,7 +3,7 @@ import { Box, Button, Flex, Text, Input } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
 import { DeleteIcon } from "@chakra-ui/icons";
 
-const Card = ({ task, index, handleChange, column }) => {
+const Card = ({ task, index, handleChange, column, deleteTask }) => {
   const [isEditable, setIsEditable] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -72,7 +72,11 @@ const Card = ({ task, index, handleChange, column }) => {
             flexDir="row"
             gap="8px"
           >
-            <Button bg="delete-button" _hover={{ background: "#c71212d6" }}>
+            <Button
+              bg="delete-button"
+              _hover={{ background: "#c71212d6" }}
+              onClick={() => deleteTask(column, task.id)}
+            >
               <DeleteIcon />
             </Button>
           </Box>

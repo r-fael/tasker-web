@@ -3,7 +3,13 @@ import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import Card from "./Card/Card";
-export default function Column({ column, tasks, addTask, handleChange }) {
+export default function Column({
+  column,
+  tasks,
+  addTask,
+  deleteTask,
+  handleChange,
+}) {
   return (
     <Flex rounded="3px" bg="column-bg" w="400px" minH="620px" flexDir="column">
       <Flex
@@ -41,6 +47,7 @@ export default function Column({ column, tasks, addTask, handleChange }) {
             {tasks?.map((task, index) => (
               <Card
                 handleChange={handleChange}
+                deleteTask={deleteTask}
                 task={task}
                 index={index}
                 key={index}

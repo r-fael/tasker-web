@@ -5,6 +5,7 @@ const Column = dynamic(() => import("../src/Column"), { ssr: false });
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { RepeatIcon } from "@chakra-ui/icons";
 
 export default function Home() {
   const [state, setState] = useState({} as IInitialData);
@@ -74,14 +75,19 @@ export default function Home() {
     setState(newState);
   };
 
-  const handleChange = (column, value, index) => {
+  const handleChange = (column, value, index, date) => {
     const newState = { ...state };
     newState.tasks = {
       ...newState.tasks,
-      [index]: { id: index, content: value },
+      [index]: { id: index, content: value, creationDate: date },
     };
 
     setState(newState);
+  };
+
+  const handleResetCount = () => {
+    setTasksCount(0);
+    localStorage.setItem("tasksCount", "0");
   };
 
   const addTask = (title) => {
@@ -89,7 +95,12 @@ export default function Home() {
     const id = Object.keys(newState.tasks).length + 1;
     newState.tasks = {
       ...newState.tasks,
-      [id]: { id: id, content: "Empty Task" },
+      [id]: {
+        id: id,
+        content: "Empty Task",
+        new: true,
+        creationDate: new Date(),
+      },
     };
     newState.columns[title].taskIds = [id, ...newState.columns[title].taskIds];
     setState(newState);
@@ -118,6 +129,7 @@ export default function Home() {
 
   useEffect(() => {
     //if state changes
+
     if (Object.keys(state).length > 0)
       localStorage.setItem("state", JSON.stringify(state));
   }, [state]);
@@ -158,22 +170,27 @@ export default function Home() {
           <Heading fontSize="3xl" fontWeight={600}>
             Tasker
           </Heading>
-          <Text fontSize="20px" fontWeight={600} color="subtle-text">
+          {/* <Text fontSize="20px" fontWeight={600} color="subtle-text">
             by r-fael
-          </Text>
+          </Text> */}
         </Flex>
 
         {tasksCount > 0 && (
-          <Text
-            fontSize="24px"
-            fontWeight={600}
+          <Flex
             position="absolute"
             insetEnd="1"
             top="4rem"
             right="4rem"
+            fontSize="22px"
+            fontWeight={600}
+            gap="6px"
+            alignItems="center"
+            justifyContent="center"
           >
-            {tasksCount} task{tasksCount > 1 ? "s" : ""} completed
-          </Text>
+            <RepeatIcon onClick={handleResetCount} />
+            <Text color="green">{tasksCount}</Text>
+            <Text>task{tasksCount > 1 ? "s" : ""} completed</Text>
+          </Flex>
         )}
 
         <Flex justify="center" p="0 4rem 4rem 4rem" gap="2rem">
@@ -204,6 +221,8 @@ interface IInitialData {
     [key: number]: {
       id: number;
       content: string;
+      new?: boolean;
+      creationDate: Date;
     };
   };
   columns: {
@@ -215,8 +234,6 @@ interface IInitialData {
   };
   columnOrder: string[];
 }
-
-const initialCount = 0;
 
 const initialData: IInitialData = {
   tasks: {

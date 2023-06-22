@@ -6,6 +6,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <title>Tasker</title>
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link

@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
   const [state, setState] = useState({} as IInitialData);
-
+  const [tasksCount, setTasksCount] = useState<number>(0);
   const reorderColumnsList = (sourceColumn, startIndex, endIndex) => {
     const newTasksIds = Array.from(sourceColumn.taskIds);
     const [item] = newTasksIds.splice(startIndex, 1);
@@ -102,7 +102,7 @@ export default function Home() {
       (id) => id != index
     );
     toast.success("Task deleted successfully!", {
-      position: "top-right",
+      position: "bottom-right",
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
@@ -111,16 +111,23 @@ export default function Home() {
       progress: undefined,
       theme: "dark",
     });
+    setTasksCount((prev) => prev + 1);
+    localStorage.setItem("tasksCount", `${tasksCount + 1}`);
     setState(newState);
   };
 
   useEffect(() => {
+    //if state changes
     if (Object.keys(state).length > 0)
       localStorage.setItem("state", JSON.stringify(state));
   }, [state]);
 
   useEffect(() => {
+    //init state
     const stateParsed = JSON.parse(localStorage.getItem("state"));
+    const tasksCount = Number(localStorage.getItem("tasksCount"));
+    console.log(tasksCount);
+    if (tasksCount !== null) setTasksCount(tasksCount);
     if (stateParsed !== null) setState(stateParsed);
     else setState(initialData);
   }, []);
@@ -128,7 +135,7 @@ export default function Home() {
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <ToastContainer
-        position="top-right"
+        position="bottom-right"
         autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -155,6 +162,20 @@ export default function Home() {
             by r-fael
           </Text>
         </Flex>
+
+        {tasksCount > 0 && (
+          <Text
+            fontSize="24px"
+            fontWeight={600}
+            position="absolute"
+            insetEnd="1"
+            top="4rem"
+            right="4rem"
+          >
+            {tasksCount} task{tasksCount > 1 ? "s" : ""} completed
+          </Text>
+        )}
+
         <Flex justify="center" p="0 4rem 4rem 4rem" gap="2rem">
           {state.columnOrder?.map((columnId) => {
             const column = state.columns[columnId];
@@ -194,6 +215,8 @@ interface IInitialData {
   };
   columnOrder: string[];
 }
+
+const initialCount = 0;
 
 const initialData: IInitialData = {
   tasks: {

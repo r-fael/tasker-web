@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useCallback, useLayoutEffect, useState } from "react";
 import { Box, Button, Flex, Text, Input, Textarea } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -50,9 +50,10 @@ const Card = ({
           bg="card-bg"
           rounded="3px"
           p="1.5rem"
-          justifyContent="space-between"
+          justifyContent="flex-start"
           position="relative"
           gap="0.4rem"
+          cursor="default"
         >
           <Flex justifyContent="space-between">
             <Box
@@ -61,20 +62,23 @@ const Card = ({
               h="10px"
               bg={priorityColors[task?.priority]}
               top="0"
-              cursor="pointer"
               left="15px"
+              cursor="pointer"
               borderRadius="0 0 4px 4px"
               onClick={() => handlePriority(task)}
             />
             {isEditable ? (
               <Textarea
+                marginEnd="1rem"
                 onBlur={() => handleIsEditable(true)}
                 value={value}
                 onChange={handleValue}
+                size="md"
               />
             ) : (
               <Text
                 backgroundColor="#2D374"
+                cursor="pointer"
                 onClick={() => handleIsEditable(false)}
                 maxW="60%"
                 flexWrap="wrap"
@@ -83,13 +87,7 @@ const Card = ({
               </Text>
             )}
 
-            <Box
-              display="flex"
-              justifySelf="flex-end"
-              alignSelf="center"
-              flexDir="row"
-              gap="8px"
-            >
+            <Box display="flex" justifySelf="flex-end" flexDir="row" gap="8px">
               <Button
                 bg="delete-button"
                 _focus={{ background: "#c71212d6" }}

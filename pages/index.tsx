@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { Flex, Heading, Icon } from "@chakra-ui/react";
+import { CloseButton, Flex, Heading, Icon } from "@chakra-ui/react";
 const Column = dynamic(() => import("../src/Column"), { ssr: false });
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { toast, ToastContainer } from "react-toastify";
@@ -144,7 +144,6 @@ export default function Home() {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "dark",
     });
     setState(newState);
   };
@@ -200,7 +199,10 @@ export default function Home() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        toastStyle={{ backgroundColor: "#1A1D23", color: "white" }}
+        closeButton={
+          <CloseButton color="white" fontSize="0.6rem" paddingInline="1rem" />
+        }
       />
       <Flex
         flexDir="column"

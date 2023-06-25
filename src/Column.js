@@ -11,6 +11,10 @@ export default function Column({
   handlePriority,
   priorityFilter,
 }) {
+  const tasksToShow = tasks?.filter((task) => {
+    if (priorityFilter != "none") return task.priority === priorityFilter;
+    else return task;
+  });
   return (
     <Flex rounded="3px" bg="column-bg" w="400px" minH="620px" flexDir="column">
       <Flex
@@ -23,7 +27,7 @@ export default function Column({
         justifyContent="space-between"
       >
         <Text fontSize="17px" fontWeight={600} color="subtle-text">
-          {column.title}
+          {column.title} ({tasksToShow.length})
         </Text>
 
         <Button
@@ -45,23 +49,17 @@ export default function Column({
             ref={droppableProvided.innerRef}
             {...droppableProvided.droppableProps}
           >
-            {tasks
-              ?.filter((task) => {
-                if (priorityFilter != "none")
-                  return task.priority === priorityFilter;
-                else return task;
-              })
-              .map((task, index) => (
-                <Card
-                  handlePriority={handlePriority}
-                  handleChange={handleChange}
-                  deleteTask={deleteTask}
-                  task={task}
-                  index={index}
-                  key={index}
-                  column={column.id}
-                />
-              ))}
+            {tasksToShow.map((task, index) => (
+              <Card
+                handlePriority={handlePriority}
+                handleChange={handleChange}
+                deleteTask={deleteTask}
+                task={task}
+                index={index}
+                key={index}
+                column={column.id}
+              />
+            ))}
             {droppableProvided.placeholder}
           </Flex>
         )}

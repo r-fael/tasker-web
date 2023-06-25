@@ -58,9 +58,10 @@ const Card = ({
             <Box
               position="absolute"
               w="40px"
-              h="8px"
+              h="10px"
               bg={priorityColors[task?.priority]}
               top="0"
+              cursor="pointer"
               left="15px"
               borderRadius="0 0 4px 4px"
               onClick={() => handlePriority(task)}

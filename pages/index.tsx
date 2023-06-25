@@ -171,11 +171,20 @@ export default function Home() {
     none: "white",
   };
 
+  const priorityBorderColors = {
+    low: "#22543D",
+    medium: "#744210",
+    high: "#822727",
+    none: "#A0AEC0",
+  };
+
   const CircleIcon = (props) => (
     <Icon viewBox="0 0 200 200" {...props}>
       <path
         fill="currentColor"
         d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+        stroke-width="30"
+        stroke={props.selected ? priorityBorderColors[props.priority] : "none"}
       />
     </Icon>
   );
@@ -213,6 +222,8 @@ export default function Home() {
               (priority: "low" | "medium" | "high" | "none") => (
                 <CircleIcon
                   key={priority}
+                  priority={priority}
+                  selected={priorityFilter == priority}
                   fontSize="22px"
                   color={priorityColors[priority]}
                   onClick={() => setPriorityFilter(priority)}

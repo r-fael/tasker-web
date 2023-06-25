@@ -1,7 +1,6 @@
 import React from "react";
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { Draggable, Droppable } from "react-beautiful-dnd";
-import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
+import { Button, Flex, Text } from "@chakra-ui/react";
+import { Droppable } from "react-beautiful-dnd";
 import Card from "./Card/Card";
 export default function Column({
   column,
@@ -9,6 +8,8 @@ export default function Column({
   addTask,
   deleteTask,
   handleChange,
+  handlePriority,
+  priorityFilter,
 }) {
   return (
     <Flex rounded="3px" bg="column-bg" w="400px" minH="620px" flexDir="column">
@@ -44,16 +45,23 @@ export default function Column({
             ref={droppableProvided.innerRef}
             {...droppableProvided.droppableProps}
           >
-            {tasks?.map((task, index) => (
-              <Card
-                handleChange={handleChange}
-                deleteTask={deleteTask}
-                task={task}
-                index={index}
-                key={index}
-                column={column.id}
-              />
-            ))}
+            {tasks
+              ?.filter((task) => {
+                if (priorityFilter != "none")
+                  return task.priority === priorityFilter;
+                else return task;
+              })
+              .map((task, index) => (
+                <Card
+                  handlePriority={handlePriority}
+                  handleChange={handleChange}
+                  deleteTask={deleteTask}
+                  task={task}
+                  index={index}
+                  key={index}
+                  column={column.id}
+                />
+              ))}
             {droppableProvided.placeholder}
           </Flex>
         )}

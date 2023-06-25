@@ -3,7 +3,14 @@ import { Box, Button, Flex, Text, Input, Textarea } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
 import { DeleteIcon } from "@chakra-ui/icons";
 
-const Card = ({ task, index, handleChange, column, deleteTask }) => {
+const Card = ({
+  task,
+  index,
+  handleChange,
+  column,
+  deleteTask,
+  handlePriority,
+}) => {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState("");
 
@@ -19,9 +26,14 @@ const Card = ({ task, index, handleChange, column, deleteTask }) => {
   const handleIsEditable = (input) => {
     setIsEditable(!isEditable);
     if (input && value) {
-      task.new = false;
-      handleChange(column, value, task.id, task.creationDate);
+      handleChange(column, task, value);
     }
+  };
+
+  const priorityColors = {
+    low: "green.500",
+    medium: "yellow.500",
+    high: "red.500",
   };
 
   return (
@@ -47,12 +59,13 @@ const Card = ({ task, index, handleChange, column, deleteTask }) => {
               position="absolute"
               w="40px"
               h="8px"
-              bg="green"
+              bg={priorityColors[task?.priority]}
               top="0"
               left="15px"
               borderRadius="0 0 4px 4px"
+              onClick={() => handlePriority(task)}
             />
-            {isEditable || task?.new ? (
+            {isEditable ? (
               <Textarea
                 onBlur={() => handleIsEditable(true)}
                 value={value}
@@ -88,7 +101,6 @@ const Card = ({ task, index, handleChange, column, deleteTask }) => {
           </Flex>
           <Flex>
             <Text fontWeight="bold" fontSize="0.8rem">
-              {console.log(typeof task?.creationDate)}
               {new Date(task?.creationDate).getDate()} /{" "}
               {`${new Date(task?.creationDate).getMonth()}`.padStart(2, 0)} /{" "}
               {new Date(task?.creationDate).getFullYear()}

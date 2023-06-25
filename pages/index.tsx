@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { Flex, Heading, Text } from "@chakra-ui/react";
+import { Flex, Heading, Icon } from "@chakra-ui/react";
 const Column = dynamic(() => import("../src/Column"), { ssr: false });
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { toast, ToastContainer } from "react-toastify";
@@ -10,6 +10,9 @@ import { RepeatIcon } from "@chakra-ui/icons";
 export default function Home() {
   const [state, setState] = useState({} as IInitialData);
   const [tasksCount, setTasksCount] = useState<number>(0);
+  const [priorityFilter, setPriorityFilter] = useState<
+    "low" | "medium" | "high" | "none"
+  >("none");
   const reorderColumnsList = (sourceColumn, startIndex, endIndex) => {
     const newTasksIds = Array.from(sourceColumn.taskIds);
     const [item] = newTasksIds.splice(startIndex, 1);
@@ -75,33 +78,54 @@ export default function Home() {
     setState(newState);
   };
 
-  const handleChange = (column, value, index, date) => {
+  const handleChange = (column, task, content) => {
     const newState = { ...state };
+    const newTask = { ...task, content: content };
     newState.tasks = {
       ...newState.tasks,
-      [index]: { id: index, content: value, creationDate: date },
+      [newTask.id]: newTask,
     };
-
     setState(newState);
   };
 
-  const handleResetCount = () => {
-    setTasksCount(0);
-    localStorage.setItem("tasksCount", "0");
+  const handlePriority = (task) => {
+    const newState = { ...state };
+    const newTask = { ...task };
+
+    switch (newTask?.priority) {
+      case "low":
+        newTask.priority = "medium";
+        break;
+      case "medium":
+        newTask.priority = "high";
+        break;
+
+      case "high":
+        newTask.priority = "low";
+        break;
+    }
+    console.log(newTask);
+    newState.tasks = {
+      ...newState.tasks,
+      [newTask.id]: newTask,
+    };
+    setState(newState);
   };
 
   const addTask = (title) => {
     const newState = { ...state };
-    const id = Object.keys(newState.tasks).length + 1;
+    const id = tasksCount;
     newState.tasks = {
       ...newState.tasks,
       [id]: {
         id: id,
         content: "Empty Task",
-        new: true,
         creationDate: new Date(),
+        priority: "low",
       },
     };
+    setTasksCount((prev) => prev + 1);
+    localStorage.setItem("tasksCount", `${tasksCount + 1}`);
     newState.columns[title].taskIds = [id, ...newState.columns[title].taskIds];
     setState(newState);
   };
@@ -122,14 +146,11 @@ export default function Home() {
       progress: undefined,
       theme: "dark",
     });
-    setTasksCount((prev) => prev + 1);
-    localStorage.setItem("tasksCount", `${tasksCount + 1}`);
     setState(newState);
   };
 
   useEffect(() => {
     //if state changes
-
     if (Object.keys(state).length > 0)
       localStorage.setItem("state", JSON.stringify(state));
   }, [state]);
@@ -138,12 +159,26 @@ export default function Home() {
     //init state
     const stateParsed = JSON.parse(localStorage.getItem("state"));
     const tasksCount = Number(localStorage.getItem("tasksCount"));
-    console.log(tasksCount);
     if (tasksCount !== null) setTasksCount(tasksCount);
     if (stateParsed !== null) setState(stateParsed);
     else setState(initialData);
   }, []);
 
+  const priorityColors = {
+    low: "green.500",
+    medium: "yellow.500",
+    high: "red.500",
+    none: "white",
+  };
+
+  const CircleIcon = (props) => (
+    <Icon viewBox="0 0 200 200" {...props}>
+      <path
+        fill="currentColor"
+        d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+      />
+    </Icon>
+  );
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <ToastContainer
@@ -162,54 +197,49 @@ export default function Home() {
         flexDir="column"
         bg="main-bg"
         minH="100vh"
-        w="full"
+        w="-moz-fit-content"
         color="white-text"
         userSelect="none"
       >
-        <Flex py="4rem" flexDirection="column" align="center">
+        <Flex pt="4rem" pb="2rem" flexDirection="column" align="center">
           <Heading fontSize="3xl" fontWeight={600}>
             Tasker
           </Heading>
-          {/* <Text fontSize="20px" fontWeight={600} color="subtle-text">
-            by r-fael
-          </Text> */}
         </Flex>
 
-        {tasksCount > 0 && (
-          <Flex
-            position="absolute"
-            insetEnd="1"
-            top="4rem"
-            right="4rem"
-            fontSize="22px"
-            fontWeight={600}
-            gap="6px"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <RepeatIcon onClick={handleResetCount} />
-            <Text color="green">{tasksCount}</Text>
-            <Text>task{tasksCount > 1 ? "s" : ""} completed</Text>
+        <Flex gap="2rem" flexDirection="column">
+          <Flex gap="6px" justify="flex-end" paddingInline="10%">
+            {["low", "medium", "high", "none"].map(
+              (priority: "low" | "medium" | "high" | "none") => (
+                <CircleIcon
+                  key={priority}
+                  fontSize="22px"
+                  color={priorityColors[priority]}
+                  onClick={() => setPriorityFilter(priority)}
+                />
+              )
+            )}
           </Flex>
-        )}
-
-        <Flex justify="center" p="0 4rem 4rem 4rem" gap="2rem">
-          {state.columnOrder?.map((columnId) => {
-            const column = state.columns[columnId];
-            const tasks = column.taskIds.map((taskId) => {
-              return state.tasks[taskId];
-            });
-            return (
-              <Column
-                addTask={addTask}
-                deleteTask={deleteTask}
-                key={column.id}
-                column={column}
-                tasks={tasks}
-                handleChange={handleChange}
-              />
-            );
-          })}
+          <Flex justify="space-between" p="0 10% 10% 10%" gap="2rem">
+            {state.columnOrder?.map((columnId) => {
+              const column = state.columns[columnId];
+              const tasks = column.taskIds.map((taskId) => {
+                return state.tasks[taskId];
+              });
+              return (
+                <Column
+                  handlePriority={handlePriority}
+                  priorityFilter={priorityFilter}
+                  addTask={addTask}
+                  deleteTask={deleteTask}
+                  key={column.id}
+                  column={column}
+                  tasks={tasks}
+                  handleChange={handleChange}
+                />
+              );
+            })}
+          </Flex>
         </Flex>
       </Flex>
     </DragDropContext>
@@ -221,8 +251,8 @@ interface IInitialData {
     [key: number]: {
       id: number;
       content: string;
-      new?: boolean;
       creationDate: Date;
+      priority: "low" | "medium" | "high";
     };
   };
   columns: {

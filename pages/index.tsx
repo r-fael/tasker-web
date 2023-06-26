@@ -208,7 +208,7 @@ export default function Home() {
         flexDir="column"
         bg="main-bg"
         minH="100vh"
-        w="-moz-fit-content"
+        w="full"
         color="white-text"
         userSelect="none"
       >
@@ -233,7 +233,7 @@ export default function Home() {
               )
             )}
           </Flex>
-          <Flex justify="space-between" p="0 10% 10% 10%" gap="2rem">
+          <Flex justify="space-between" p="0 10% 5% 10%" gap="2rem">
             {state.columnOrder?.map((columnId) => {
               const column = state.columns[columnId];
               const tasks = column.taskIds.map((taskId) => {

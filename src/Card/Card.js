@@ -101,7 +101,7 @@ const Card = ({
           <Flex>
             <Text fontWeight="bold" fontSize="0.8rem">
               {new Date(task?.creationDate).getDate()} /{" "}
-              {`${new Date(task?.creationDate).getMonth()}`.padStart(2, 0)} /{" "}
+              {`${new Date(task?.creationDate).getMonth() + 1}`.padStart(2, 0)} /{" "}
               {new Date(task?.creationDate).getFullYear()}
             </Text>
           </Flex>

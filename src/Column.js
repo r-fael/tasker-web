@@ -30,7 +30,7 @@ export default function Column({
           {column.title} ({tasksToShow.length})
         </Text>
 
-        <Button
+        {column?.id !== "column-3" && <Button
           onClick={() => addTask(column.id)}
           bg="card-bg"
           w="32px"
@@ -38,7 +38,7 @@ export default function Column({
           colorScheme="card-darker-bg"
         >
           +
-        </Button>
+        </Button>}
       </Flex>
       <Droppable droppableId={column.id}>
         {(droppableProvided, snapshot) => (

@@ -81,7 +81,7 @@ const Card = ({
                 cursor="pointer"
                 marginEnd="1rem"
                 onClick={() => handleIsEditable(false)}
-                wordBreak="break-all"
+                wordBreak="break-word"
                 flexWrap="wrap"
               >
                 {task?.content}

@@ -208,6 +208,7 @@ export default function Home() {
         bg="main-bg"
         minH="100vh"
         w="full"
+        overflowX="hidden"
         color="white-text"
         userSelect="none"
         alignItems="center"

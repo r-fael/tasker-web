@@ -1,7 +1,7 @@
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import { Box, Button, Flex, Text, Input, Textarea } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { CalendarIcon, DeleteIcon, TimeIcon } from "@chakra-ui/icons";
 
 const Card = ({
   task,
@@ -99,12 +99,37 @@ const Card = ({
               </Button>
             </Box>
           </Flex>
-          <Flex>
-            <Text fontWeight="bold" fontSize="0.7rem" color="subtle-text">
-              {new Date(task?.creationDate).getDate()} /{" "}
-              {`${new Date(task?.creationDate).getMonth() + 1}`.padStart(2, 0)}{" "}
-              / {`${new Date(task?.creationDate).getFullYear()}`.slice(-2)}
-            </Text>
+          <Flex gap="0.5rem" alignItems="center">
+            <Flex
+              fontWeight="bold"
+              fontSize="0.7rem"
+              gap="0.3rem"
+              color="subtle-text"
+              alignItems="center"
+            >
+              <CalendarIcon />
+              <Text>
+                {new Date(task?.creationDate).getDate()} /{" "}
+                {`${new Date(task?.creationDate).getMonth() + 1}`.padStart(
+                  2,
+                  0
+                )}{" "}
+                / {`${new Date(task?.creationDate).getFullYear()}`.slice(-2)}{" "}
+              </Text>
+            </Flex>
+            <Flex
+              fontWeight="bold"
+              fontSize="0.7rem"
+              color="subtle-text"
+              gap="0.3rem"
+              alignItems="center"
+            >
+              <TimeIcon />
+              <Text>
+                {new Date(task?.creationDate).getHours()}:
+                {`${new Date(task?.creationDate).getMinutes()}`.padStart(2, 0)}
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
       )}

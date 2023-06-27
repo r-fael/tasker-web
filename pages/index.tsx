@@ -104,7 +104,6 @@ export default function Home() {
         newTask.priority = "low";
         break;
     }
-    console.log(newTask);
     newState.tasks = {
       ...newState.tasks,
       [newTask.id]: newTask,
@@ -121,7 +120,7 @@ export default function Home() {
         id: id,
         content: "Empty Task",
         creationDate: new Date(),
-        priority: "low",
+        priority: priorityFilter === "none" ? "low" : priorityFilter,
       },
     };
     setTasksCount((prev) => prev + 1);
@@ -182,7 +181,7 @@ export default function Home() {
       <path
         fill="currentColor"
         d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-        stroke-width="30"
+        strokeWidth="30"
         stroke={props.selected ? priorityBorderColors[props.priority] : "none"}
       />
     </Icon>
@@ -200,9 +199,9 @@ export default function Home() {
         draggable
         pauseOnHover
         toastStyle={{ backgroundColor: "#1A1D23", color: "white" }}
-        closeButton={
+        closeButton={() => (
           <CloseButton color="white" fontSize="0.6rem" paddingInline="1rem" />
-        }
+        )}
       />
       <Flex
         flexDir="column"
@@ -211,6 +210,8 @@ export default function Home() {
         w="full"
         color="white-text"
         userSelect="none"
+        alignItems="center"
+        justifyContent="flex-start"
       >
         <Flex pt="4rem" pb="2rem" flexDirection="column" align="center">
           <Heading fontSize="3xl" fontWeight={600}>
@@ -218,8 +219,14 @@ export default function Home() {
           </Heading>
         </Flex>
 
-        <Flex gap="2rem" flexDirection="column">
-          <Flex gap="6px" justify="flex-end" paddingInline="10%">
+        <Flex
+          gap="2rem"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          maxW="100rem"
+        >
+          <Flex gap="6px" justifySelf="flex-end" alignSelf="flex-end">
             {["low", "medium", "high", "none"].map(
               (priority: "low" | "medium" | "high" | "none") => (
                 <CircleIcon
@@ -233,7 +240,7 @@ export default function Home() {
               )
             )}
           </Flex>
-          <Flex justify="space-between" p="0 10% 5% 10%" gap="2rem">
+          <Flex justify="center" p="0 10% 5% 10%" gap="2rem">
             {state.columnOrder?.map((columnId) => {
               const column = state.columns[columnId];
               const tasks = column.taskIds.map((taskId) => {

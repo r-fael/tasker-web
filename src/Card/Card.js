@@ -79,8 +79,9 @@ const Card = ({
               <Text
                 backgroundColor="#2D374"
                 cursor="pointer"
+                marginEnd="1rem"
                 onClick={() => handleIsEditable(false)}
-                maxW="60%"
+                wordBreak="break-all"
                 flexWrap="wrap"
               >
                 {task?.content}
@@ -99,10 +100,10 @@ const Card = ({
             </Box>
           </Flex>
           <Flex>
-            <Text fontWeight="bold" fontSize="0.8rem">
+            <Text fontWeight="bold" fontSize="0.7rem" color="subtle-text">
               {new Date(task?.creationDate).getDate()} /{" "}
-              {`${new Date(task?.creationDate).getMonth() + 1}`.padStart(2, 0)} /{" "}
-              {new Date(task?.creationDate).getFullYear()}
+              {`${new Date(task?.creationDate).getMonth() + 1}`.padStart(2, 0)}{" "}
+              / {`${new Date(task?.creationDate).getFullYear()}`.slice(-2)}
             </Text>
           </Flex>
         </Flex>

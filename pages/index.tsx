@@ -135,15 +135,15 @@ export default function Home() {
     newState.columns[column].taskIds = newState.columns[column].taskIds.filter(
       (id) => id != index
     );
-    toast.success("Task deleted successfully!", {
-      position: "bottom-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    // toast.success("Task deleted successfully!", {
+      // position: "bottom-right",
+      // autoClose: 2000,
+      // hideProgressBar: false,
+      // closeOnClick: true,
+      // pauseOnHover: true,
+      // draggable: true,
+      // progress: undefined,
+    // });
     setState(newState);
   };
 

@@ -121,7 +121,7 @@ const Card = ({
               fontWeight="bold"
               fontSize="0.7rem"
               color="subtle-text"
-              gap="0.3rem"
+              gap="0.3rem" 
               alignItems="center"
             >
               <TimeIcon />

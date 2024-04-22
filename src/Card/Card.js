@@ -1,7 +1,7 @@
 import React, { useCallback, useLayoutEffect, useState } from "react";
 import { Box, Button, Flex, Text, Input, Textarea } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
-import { CalendarIcon, DeleteIcon, TimeIcon } from "@chakra-ui/icons";
+import { CalendarIcon, SmallCloseIcon, TimeIcon } from "@chakra-ui/icons";
 
 const Card = ({
   task,
@@ -94,8 +94,14 @@ const Card = ({
                 _focus={{ background: "#c71212d6" }}
                 _hover={{ background: "#c71212d6" }}
                 onClick={() => deleteTask(column, task.id)}
+                position="absolute"
+                w="2"
+                h="5"
+                top="0"
+                right="0"
+                borderRadius="0 4px 0  4px"
               >
-                <DeleteIcon />
+                <SmallCloseIcon />
               </Button>
             </Box>
           </Flex>
@@ -121,7 +127,7 @@ const Card = ({
               fontWeight="bold"
               fontSize="0.7rem"
               color="subtle-text"
-              gap="0.3rem" 
+              gap="0.3rem"
               alignItems="center"
             >
               <TimeIcon />

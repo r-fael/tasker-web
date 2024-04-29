@@ -73,7 +73,13 @@ const DeleteButton = ({ column, task, deleteTask }) => {
   );
 };
 
-const DisplayText = ({ isEditable, handleIsEditable, task, handleValue }) => {
+const DisplayText = ({
+  isEditable,
+  handleIsEditable,
+  task,
+  handleValue,
+  value,
+}) => {
   return (
     <>
       {isEditable ? (
@@ -174,6 +180,7 @@ const Card = ({
               handleIsEditable={handleIsEditable}
               isEditable={isEditable}
               task={task}
+              value={value}
             />
 
             <DeleteButton deleteTask={deleteTask} task={task} column={column} />

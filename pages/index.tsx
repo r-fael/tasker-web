@@ -1,18 +1,56 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { CloseButton, Flex, Heading, Icon } from "@chakra-ui/react";
-const Column = dynamic(() => import("../src/Column"), { ssr: false });
+import {
+  CloseButton,
+  Flex,
+  Heading,
+  Icon,
+  useDisclosure,
+} from "@chakra-ui/react";
+const Column = dynamic(() => import("../src/Components/Column/Column"), {
+  ssr: false,
+});
+import TaskModal from "../src/Components/Modal/Modal";
+
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RepeatIcon } from "@chakra-ui/icons";
 
-export default function Home() {
+export const priorityColors = {
+  low: "green.500",
+  medium: "yellow.500",
+  high: "red.500",
+  none: "white",
+};
+
+export const priorityBorderColors = {
+  low: "#22543D",
+  medium: "#744210",
+  high: "#822727",
+  none: "#A0AEC0",
+};
+
+const CircleIcon = ({ selected, priority, ...props }) => (
+  <Icon viewBox="0 0 200 200" {...props}>
+    <path
+      fill="currentColor"
+      d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
+      strokeWidth="30"
+      stroke={selected ? priorityBorderColors[priority] : "none"}
+    />
+  </Icon>
+);
+
+export default function Main() {
   const [state, setState] = useState({} as IInitialData);
+  const [columnToAdd, setColumnToAdd] = useState("");
   const [tasksCount, setTasksCount] = useState<number>(0);
   const [priorityFilter, setPriorityFilter] = useState<
     "low" | "medium" | "high" | "none"
   >("none");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const reorderColumnsList = (sourceColumn, startIndex, endIndex) => {
     const newTasksIds = Array.from(sourceColumn.taskIds);
     const [item] = newTasksIds.splice(startIndex, 1);
@@ -104,6 +142,7 @@ export default function Home() {
         newTask.priority = "low";
         break;
     }
+
     newState.tasks = {
       ...newState.tasks,
       [newTask.id]: newTask,
@@ -111,21 +150,34 @@ export default function Home() {
     setState(newState);
   };
 
-  const addTask = (title) => {
+  const handleOpenModal = (column) => {
+    setColumnToAdd(column);
+    onOpen();
+  };
+
+  const handleSubmit = (title, priority) => {
+    onClose();
+    addTask(columnToAdd, title, priority);
+  };
+
+  const addTask = (column, title, priority) => {
     const newState = { ...state };
     const id = tasksCount;
     newState.tasks = {
       ...newState.tasks,
       [id]: {
         id: id,
-        content: "Empty Task",
+        content: title,
         creationDate: new Date(),
-        priority: priorityFilter === "none" ? "low" : priorityFilter,
+        priority: priority,
       },
     };
     setTasksCount((prev) => prev + 1);
     localStorage.setItem("tasksCount", `${tasksCount + 1}`);
-    newState.columns[title].taskIds = [id, ...newState.columns[title].taskIds];
+    newState.columns[column].taskIds = [
+      id,
+      ...newState.columns[column].taskIds,
+    ];
     setState(newState);
   };
 
@@ -136,13 +188,13 @@ export default function Home() {
       (id) => id != index
     );
     // toast.success("Task deleted successfully!", {
-      // position: "bottom-right",
-      // autoClose: 2000,
-      // hideProgressBar: false,
-      // closeOnClick: true,
-      // pauseOnHover: true,
-      // draggable: true,
-      // progress: undefined,
+    // position: "bottom-right",
+    // autoClose: 2000,
+    // hideProgressBar: false,
+    // closeOnClick: true,
+    // pauseOnHover: true,
+    // draggable: true,
+    // progress: undefined,
     // });
     setState(newState);
   };
@@ -162,30 +214,6 @@ export default function Home() {
     else setState(initialData);
   }, []);
 
-  const priorityColors = {
-    low: "green.500",
-    medium: "yellow.500",
-    high: "red.500",
-    none: "white",
-  };
-
-  const priorityBorderColors = {
-    low: "#22543D",
-    medium: "#744210",
-    high: "#822727",
-    none: "#A0AEC0",
-  };
-
-  const CircleIcon = (props) => (
-    <Icon viewBox="0 0 200 200" {...props}>
-      <path
-        fill="currentColor"
-        d="M 100, 100 m -75, 0 a 75,75 0 1,0 150,0 a 75,75 0 1,0 -150,0"
-        strokeWidth="30"
-        stroke={props.selected ? priorityBorderColors[props.priority] : "none"}
-      />
-    </Icon>
-  );
   return (
     <DragDropContext onDragEnd={handleOnDragEnd}>
       <ToastContainer
@@ -203,6 +231,7 @@ export default function Home() {
           <CloseButton color="white" fontSize="0.6rem" paddingInline="1rem" />
         )}
       />
+
       <Flex
         flexDir="column"
         bg="main-bg"
@@ -251,7 +280,7 @@ export default function Home() {
                 <Column
                   handlePriority={handlePriority}
                   priorityFilter={priorityFilter}
-                  addTask={addTask}
+                  handleOpenModal={handleOpenModal}
                   deleteTask={deleteTask}
                   key={column.id}
                   column={column}
@@ -263,6 +292,11 @@ export default function Home() {
           </Flex>
         </Flex>
       </Flex>
+      <TaskModal
+        isOpen={isOpen}
+        handleSubmit={handleSubmit}
+        onClose={onClose}
+      />
     </DragDropContext>
   );
 }
@@ -287,14 +321,7 @@ interface IInitialData {
 }
 
 const initialData: IInitialData = {
-  tasks: {
-    // 0: { id: 0, content: "Configure Next.js application" },
-    // 1: { id: 1, content: "Configure Next.js and tailwind " },
-    // 2: { id: 2, content: "Create sidebar navigation menu" },
-    // 3: { id: 3, content: "Create page footer" },
-    // 4: { id: 4, content: "Create page navigation menu" },
-    // 5: { id: 5, content: "Create page layout" },
-  },
+  tasks: {},
   columns: {
     "column-1": {
       id: "column-1",
@@ -312,6 +339,6 @@ const initialData: IInitialData = {
       taskIds: [],
     },
   },
-  // Facilitate reordering of the columns
+
   columnOrder: ["column-1", "column-2", "column-3"],
 };

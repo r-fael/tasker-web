@@ -9,7 +9,6 @@ const DateText = ({ date }) => {
   const day = date.getDate();
   const month = `${date.getMonth() + 1}`.padStart(2, 0);
   const year = `${date.getFullYear()}`.slice(-2);
-
   const dateToDisplay = `${day} / ${month} / ${year}`;
   return <Text>{dateToDisplay}</Text>;
 };

@@ -20,7 +20,7 @@ const TimeText = ({ date }) => {
 
   const timeToDisplay = `${hours}:${minutes}`;
 
-  return <Text children={timeToDisplay} />;
+  return <Text>{timeToDisplay}</Text>;
 };
 
 const DateTime = ({ dateTime }) => {

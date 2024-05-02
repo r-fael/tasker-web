@@ -55,7 +55,7 @@ const DeleteButton = ({ column, task, deleteTask }) => {
       <Button
         bg="card-bg"
         w="32px"
-        h="32px"
+        h="20px"
         top="0"
         right="0"
         position="absolute"
@@ -173,7 +173,7 @@ const Card = ({
           gap="1rem"
           cursor="default"
         >
-          <Flex justifyContent="space-between" marginTop={"1.5rem"}>
+          <Flex justifyContent="space-between">
             <PriorityBox handlePriority={handlePriority} task={task} />
             <DisplayText
               handleValue={handleValue}

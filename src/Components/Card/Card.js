@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const DateText = ({ date }) => {
-  const day = date.getDate();
+  const day = `${date.getDate()}`.padStart(2, 0);
   const month = `${date.getMonth() + 1}`.padStart(2, 0);
   const year = `${date.getFullYear()}`.slice(-2);
   const dateToDisplay = `${day} / ${month} / ${year}`;

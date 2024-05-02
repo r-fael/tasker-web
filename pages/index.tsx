@@ -157,7 +157,6 @@ export default function Main() {
   };
 
   const handleSubmit = (title, priority) => {
-    onClose();
     addTask(columnToAdd, title, priority);
   };
 

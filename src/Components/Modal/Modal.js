@@ -12,14 +12,65 @@ import {
   Textarea,
   Box,
 } from "@chakra-ui/react";
-import { handleText } from "../../utils";
 import styles from "./Modal.module.scss";
 import { priorityColors } from "../../../pages";
+import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";
+
+const DisplayText = ({
+  showErrors,
+  title,
+  handleValue,
+  isEditable,
+  handleIsEditable,
+}) => {
+  return (
+    <>
+      {isEditable ? (
+        <Textarea
+          isInvalid={showErrors && title.trim() === ""}
+          marginEnd="1rem"
+          value={title}
+          onBlur={(e) => handleIsEditable(e, false)}
+          onChange={handleValue}
+          size="md"
+          autoFocus
+        />
+      ) : (
+        <Box onClick={(e) => handleIsEditable(e, true)}>
+          <ReactMarkdown
+            redenre={{ code: Highlight }}
+            className={styles.reactMarkdown}
+            remarkPlugins={[remarkGfm]}
+          >
+            {title}
+          </ReactMarkdown>
+        </Box>
+      )}
+    </>
+  );
+};
 
 const TaskModal = ({ isOpen, onClose, handleSubmit }) => {
   const [title, setTitle] = useState("");
   const [showErrors, setShowErrors] = useState(false);
   const [priority, setPriority] = useState("low");
+  const [isEditable, setIsEditable] = useState(true);
+
+  const handleValue = (event) => {
+    let { value } = event.target;
+    setTitle(value);
+  };
+
+  const handleIsEditable = (e, state) => {
+    if (e.target.value) {
+      setTitle(e.target.value);
+      setIsEditable(state);
+    }
+    if (state === true) {
+      setIsEditable(state);
+    }
+  };
 
   const isValid = () => {
     const error = title?.trim() === "";
@@ -27,13 +78,10 @@ const TaskModal = ({ isOpen, onClose, handleSubmit }) => {
     return !error;
   };
 
-  const handleValue = (event) => {
-    let { value } = event.target;
-    setTitle(value);
-  };
-
   const handleOnClose = () => {
     setTitle("");
+    setPriority("low");
+    setIsEditable(true);
     setShowErrors(false);
     onClose();
   };
@@ -74,14 +122,12 @@ const TaskModal = ({ isOpen, onClose, handleSubmit }) => {
         <ModalCloseButton />
 
         <ModalBody>
-          <Textarea
-            isInvalid={showErrors && title.trim() === ""}
-            resize="none"
-            marginEnd="1rem"
-            value={title}
-            onChange={handleValue}
-            size="md"
-            autoFocus
+          <DisplayText
+            showErrors={showErrors}
+            title={title}
+            handleValue={handleValue}
+            isEditable={isEditable}
+            handleIsEditable={handleIsEditable}
           />
         </ModalBody>
 
@@ -99,7 +145,10 @@ const TaskModal = ({ isOpen, onClose, handleSubmit }) => {
           <Button
             onClick={() => {
               setTitle("");
-              if (isValid()) handleSubmit(title, priority);
+              if (isValid()) {
+                handleOnClose();
+                handleSubmit(title, priority);
+              }
             }}
             colorScheme="blue"
           >

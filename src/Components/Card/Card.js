@@ -4,15 +4,7 @@ import { Draggable } from "react-beautiful-dnd";
 import { CalendarIcon, SmallCloseIcon, TimeIcon } from "@chakra-ui/icons";
 import styles from "./Card.module.scss";
 import ReactMarkdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import remarkGfm from "remark-gfm";
-
-const Highlight = (value, language) => (
-  <SyntaxHighlighter language={language} style={docco}>
-    {value ?? ""}
-  </SyntaxHighlighter>
-);
 
 const DateText = ({ date }) => {
   const day = date.getDate();
@@ -96,9 +88,13 @@ const DisplayText = ({
           marginEnd="1rem"
           value={value}
           size="md"
+          autoFocus
         />
       ) : (
-        <Box onClick={() => handleIsEditable(false)}>
+        <Box
+          onClick={() => handleIsEditable(false)}
+          className={styles.reactMarkdownContainer}
+        >
           <ReactMarkdown
             redenre={{ code: Highlight }}
             className={styles.reactMarkdown}
@@ -177,7 +173,7 @@ const Card = ({
           gap="1rem"
           cursor="default"
         >
-          <Flex justifyContent="space-between">
+          <Flex justifyContent="space-between" marginTop={"1.5rem"}>
             <PriorityBox handlePriority={handlePriority} task={task} />
             <DisplayText
               handleValue={handleValue}

@@ -14,10 +14,11 @@
         color: white;
         cursor: pointer;
         width: 100%;
-
-        link {
-            color: blue;
-            text-decoration: underline;
+        p {
+            a {
+                color: blue;
+                text-decoration: underline;
+            }
         }
         h1 {
             font-size: 2rem !important;

@@ -29,7 +29,6 @@ const TaskModal = ({ isOpen, onClose, handleSubmit }) => {
 
   const handleValue = (event) => {
     let { value } = event.target;
-    value = handleText(value);
     setTitle(value);
   };
 
@@ -71,6 +70,7 @@ const TaskModal = ({ isOpen, onClose, handleSubmit }) => {
           <Text>Create Task</Text>
           <PriorityBox priority={priority} />
         </ModalHeader>
+
         <ModalCloseButton />
 
         <ModalBody>

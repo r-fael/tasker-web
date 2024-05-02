@@ -7,6 +7,7 @@ import {
   Icon,
   useDisclosure,
 } from "@chakra-ui/react";
+
 const Column = dynamic(() => import("../src/Components/Column/Column"), {
   ssr: false,
 });

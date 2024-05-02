@@ -2,8 +2,17 @@ import React, { useLayoutEffect, useState } from "react";
 import { Box, Button, Flex, Text, Textarea } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
 import { CalendarIcon, SmallCloseIcon, TimeIcon } from "@chakra-ui/icons";
-import { handleText } from "../../utils";
 import styles from "./Card.module.scss";
+import ReactMarkdown from "react-markdown";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import remarkGfm from "remark-gfm";
+
+const Highlight = (value, language) => (
+  <SyntaxHighlighter language={language} style={docco}>
+    {value ?? ""}
+  </SyntaxHighlighter>
+);
 
 const DateText = ({ date }) => {
   const day = date.getDate();
@@ -16,9 +25,7 @@ const DateText = ({ date }) => {
 const TimeText = ({ date }) => {
   const hours = date.getHours();
   const minutes = `${date.getMinutes()}`.padStart(2, 0);
-
   const timeToDisplay = `${hours}:${minutes}`;
-
   return <Text>{timeToDisplay}</Text>;
 };
 
@@ -91,17 +98,15 @@ const DisplayText = ({
           size="md"
         />
       ) : (
-        <Text
-          onClick={() => handleIsEditable(false)}
-          backgroundColor="#2D374"
-          wordBreak="break-word"
-          whiteSpace="pre-wrap"
-          cursor="pointer"
-          marginEnd="1rem"
-          flexWrap="wrap"
-        >
-          {task?.content}
-        </Text>
+        <Box onClick={() => handleIsEditable(false)}>
+          <ReactMarkdown
+            redenre={{ code: Highlight }}
+            className={styles.reactMarkdown}
+            remarkPlugins={[remarkGfm]}
+          >
+            {task?.content}
+          </ReactMarkdown>
+        </Box>
       )}
     </>
   );
@@ -141,7 +146,6 @@ const Card = ({
 
   const handleValue = (event) => {
     let { value } = event.target;
-    value = handleText(value);
     if (value.trim !== "") setValue(value);
   };
 

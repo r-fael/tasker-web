@@ -14,8 +14,7 @@ import {
 } from "@chakra-ui/react";
 import styles from "./Modal.module.scss";
 import { priorityColors } from "../../../pages";
-import remarkGfm from "remark-gfm";
-import ReactMarkdown from "react-markdown";
+import Markdown from "../Markdown/Markdown";
 
 const DisplayText = ({
   showErrors,
@@ -37,15 +36,7 @@ const DisplayText = ({
           autoFocus
         />
       ) : (
-        <Box onClick={(e) => handleIsEditable(e, true)}>
-          <ReactMarkdown
-            redenre={{ code: Highlight }}
-            className={styles.reactMarkdown}
-            remarkPlugins={[remarkGfm]}
-          >
-            {title}
-          </ReactMarkdown>
-        </Box>
+        <Markdown onclick={(e) => handleIsEditable(e, true)} content={title} />
       )}
     </>
   );

@@ -9,7 +9,7 @@ const ColumnHeader = ({ handleOpenModal, column, tasksToShow }) => {
       alignItems="center"
       h="60px"
       bg="column-header-bg"
-      rounded="3px 3px 0 0"
+      rounded="0.5rem 0.5rem 0 0"
       px="1.5rem"
       mb="1.5rem"
       justifyContent="space-between"
@@ -82,7 +82,13 @@ export default function Column({
     else return task;
   });
   return (
-    <Flex rounded="3px" bg="column-bg" w="400px" minH="620px" flexDir="column">
+    <Flex
+      rounded="0.5rem"
+      bg="column-bg"
+      w="400px"
+      minH="620px"
+      flexDir="column"
+    >
       <ColumnHeader
         handleOpenModal={handleOpenModal}
         column={column}

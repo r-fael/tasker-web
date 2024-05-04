@@ -1,10 +1,9 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Box, Button, Flex, Text, Textarea } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
+import Markdown from "../Markdown/Markdown";
 import { CalendarIcon, SmallCloseIcon, TimeIcon } from "@chakra-ui/icons";
 import styles from "./Card.module.scss";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 
 const DateText = ({ date }) => {
   const day = `${date.getDate()}`.padStart(2, 0);
@@ -52,22 +51,12 @@ const DateTime = ({ dateTime }) => {
 const DeleteButton = ({ column, task, deleteTask }) => {
   return (
     <Box display="flex" justifySelf="flex-end" flexDir="row" gap="8px">
-      <Button
-        bg="card-bg"
-        w="32px"
-        h="20px"
-        top="0"
-        right="0"
-        position="absolute"
-        borderRadius="0 4px 0  4px"
-        backgroundColor="delete-button"
+      <Box
+        className={styles.deleteButton}
         onClick={() => deleteTask(column, task.id)}
-        _focus={{ background: "#c71212d6" }}
-        _hover={{ background: "#c71212d6" }}
-        color="white"
       >
-        <SmallCloseIcon />
-      </Button>
+        <SmallCloseIcon color="white" />
+      </Box>
     </Box>
   );
 };
@@ -91,18 +80,10 @@ const DisplayText = ({
           autoFocus
         />
       ) : (
-        <Box
-          onClick={() => handleIsEditable(false)}
-          className={styles.reactMarkdownContainer}
-        >
-          <ReactMarkdown
-            redenre={{ code: Highlight }}
-            className={styles.reactMarkdown}
-            remarkPlugins={[remarkGfm]}
-          >
-            {task?.content}
-          </ReactMarkdown>
-        </Box>
+        <Markdown
+          onclick={() => handleIsEditable(false)}
+          content={task?.content}
+        />
       )}
     </>
   );
@@ -166,7 +147,7 @@ const Card = ({
           w="100%"
           minH="72px"
           bg="card-bg"
-          rounded="3px"
+          rounded="0.5rem"
           p="1.5rem"
           justifyContent="flex-start"
           position="relative"

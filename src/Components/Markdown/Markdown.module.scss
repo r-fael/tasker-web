@@ -1,0 +1,102 @@
+
+.reactMarkdownContainer {
+  width: 100%;
+  .reactMarkdown {
+      color: white;
+      cursor: pointer;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      h1 {
+          font-size: 2rem !important;
+      }
+      h2 {
+          font-size: 1.5rem !important;
+      }
+      h3 {
+          font-size: 1rem !important;
+      }
+      ul, ol {
+          margin-left: 1.2rem;
+      }
+      hr {
+          border: #353842 2px solid;
+          margin-block: 1rem;
+          width: 100%;
+      }
+      
+      ul {
+          li {
+              input[type=checkbox] {
+                  position: relative;
+                  margin-right: 0.5rem;
+              }
+              input[type=checkbox]:before {
+                  content: "";
+                  display: block;
+                  position: absolute;
+                  width: 16px;
+                  height: 16px;
+                  top: -1px;
+                  left: -2px;
+                  border: 2px solid #404453;
+                  background-color: #404453;
+              }
+              input[type=checkbox]:checked:after {
+                  content: "";
+                  display: block;
+                  width: 4px;
+                  height: 10px;
+                  border: solid white;
+                  border-width: 0 2px 2px 0;
+                  -webkit-transform: rotate(45deg);
+                  -ms-transform: rotate(45deg);
+                  transform: rotate(45deg);
+                  position: absolute;
+                  top: 2px;
+                  left: 5px;
+              }
+          }
+      }
+
+      table {
+
+          thead, tbody {
+              tr {
+                  td, th {
+                      border: #17191f 3px solid;
+                      padding: 0.3rem;
+                  }
+              }
+          }
+
+          thead {
+
+          }
+
+          tbody {
+
+          }
+      }
+
+      pre {
+        margin-bottom: 1rem;
+        background-color: #5b6276;
+        code {
+          padding: 0.2rem 0.4rem;
+        }
+        width: 100%;
+      }
+
+      blockquote {
+        margin-bottom: 1rem;
+      }
+
+      blockquote, blockquote>blockquote {
+          background-color: #404453;
+          border-radius: 0.2rem;
+          padding: 0.2rem 0.2rem 0.2rem 0.5rem;
+      }
+  }
+
+}

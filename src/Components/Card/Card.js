@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { Box, Button, Flex, Text, Textarea } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
 import Markdown from "../Markdown/Markdown";
-import { CalendarIcon, TimeIcon } from "@chakra-ui/icons";
+import { CalendarIcon, SmallCloseIcon, TimeIcon } from "@chakra-ui/icons";
 import styles from "./Card.module.scss";
 
 const DateText = ({ date }) => {
@@ -54,7 +54,9 @@ const DeleteButton = ({ column, task, deleteTask }) => {
       <Box
         className={styles.deleteButton}
         onClick={() => deleteTask(column, task.id)}
-      />
+      >
+        <SmallCloseIcon color="white" />
+      </Box>
     </Box>
   );
 };

@@ -104,7 +104,12 @@ const TaskModal = ({ isOpen, onClose, handleSubmit }) => {
   return (
     <Modal isOpen={isOpen} onClose={handleOnClose}>
       <ModalOverlay />
-      <ModalContent bg="column-header-bg" fontWeight={600} color="subtle-text">
+      <ModalContent
+        bg="column-header-bg"
+        fontWeight={600}
+        color="subtle-text"
+        rounded="0.5rem"
+      >
         <ModalHeader className={styles.titleContainer}>
           <Text>Create Task</Text>
           <PriorityBox priority={priority} />

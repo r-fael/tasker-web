@@ -26,3 +26,55 @@
 .deleteButton:hover {
     background-color: rgba(130, 20, 20, 0.839);
 }
+
+.cardContainer {
+    flex-direction: column;
+    width: 100%;
+    min-height: 72px;
+    background-color: #242731;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    justify-content: flex-start;
+    gap: 1rem;
+    cursor: default;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.cardBox {
+    position: relative;
+    div:has(> div[role="menu"]){
+        width: 100%;
+        height: calc(100% - 1rem);
+        background-color: rgba(26, 26, 33, 0.5);
+        border-radius: 0.5rem;
+    }
+    div[role="menu"] {
+        border: 0;
+        background: transparent;
+        padding-inline: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        button[role="menuitem"] {
+            background-color: transparent;
+        }
+        button[role="menuitem"]>button {
+            width: 100%;
+            color: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.2rem;
+            background-color: rgb(15, 16, 20, 1);
+        }
+        
+        button[role="menuitem"]>button:hover {
+            background-color: rgba(165, 16, 16, 1);
+        }
+    }
+}
+

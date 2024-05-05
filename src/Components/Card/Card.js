@@ -179,7 +179,6 @@ const Card = ({
 
   useEffect(() => {
     const event = cardRef.current.addEventListener("contextmenu", (event) => {
-      console.log("socorro");
       event.preventDefault();
       if (event.button == 2) {
         setIsMenuOpen(true);

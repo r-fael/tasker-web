@@ -197,6 +197,7 @@ const Card = ({
         task={task}
         column={column}
       />
+
       <Draggable key={task.id} draggableId={`${task.id}`} index={index}>
         {(draggableProvider, snapshot) => (
           <Flex

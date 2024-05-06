@@ -9,11 +9,9 @@ const Markdown = ({ onclick, content }) => {
   return (
     <Box onClick={onclick} className={styles.reactMarkdownContainer}>
       <ReactMarkdown
-        remarkRehypeOptions={[rehypeRaw]}
-        linkTarget="_blank"
-        redenre={{ code: Highlight }}
         className={styles.reactMarkdown}
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
       >
         {content}
       </ReactMarkdown>
